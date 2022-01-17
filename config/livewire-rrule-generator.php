@@ -1,8 +1,7 @@
 <?php
 
 return [
-    'title'         => 'Define Schedules',
-
+    'title'         => 'Define Schedule',
     'includeWeekend' => TRUE,
     'frequencies' => [
         'SECONDLY'  => FALSE,
@@ -15,5 +14,4 @@ return [
     ],
 
     'defaultView'    => 'WEEKLY',
-    'modelsLocation'    => 'App\\Models\\'
 ];

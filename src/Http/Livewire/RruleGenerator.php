@@ -10,11 +10,13 @@ use Remeritus\LivewireRruleGenerator\Services\CalendarService;
 
 class RruleGenerator extends Component
 {
-    public ?bool $includeWeekend;
-    public ?string $defaultView;
+    public ?string $childKey = '';
 
-    public array $frequencies;
-    public array $daysOfWeek;
+    public bool $includeWeekend = true;
+    public string $defaultView = 'WEEKLY';
+
+    public array $frequencies = [];
+    public array $daysOfWeek = [];
 
     public $model;
 
@@ -29,6 +31,10 @@ class RruleGenerator extends Component
     public ?string $humanReadable = '';
     public $isVisible = false;
 
+    protected $listeners = [
+        'showRruleGenerator'
+    ];
+
     public array $bySetPositions = [
         '1' => 'First',
         '2' => 'Second',
@@ -38,7 +44,7 @@ class RruleGenerator extends Component
 
     public ?string $rruleString = '';
 
-    public ?string $FREQ;
+    public string $FREQ = 'WEEKLY';
     public $INTERVAL = 1; // used for FREQ=WEEKLY and for FREQ=MONHTLY
 
     public ?string $DTSTART = NULL;
@@ -63,9 +69,8 @@ class RruleGenerator extends Component
         'BYDAY.required' => 'Please select the day.',
     ];
 
-    public function mount(string $modelName = '', ?int $modelId = NULL): void
+    public function mount(): void
     {
-        $this->setModel($modelName, $modelId);
         $this->getConfigDefaults();
         $this->getCalendarDefaults();
     }
@@ -229,12 +234,12 @@ class RruleGenerator extends Component
     public function processRrule(): void
     {
         $this->validate();
+        $this->emit('rruleCreated', (string) $this->rruleString);
+    }
 
-        if (!empty($this->model)){
-            // update existing model
-        } else {
-            // emit event so child other components can catch it
-            $this->emit('rruleCreated', [$this->rruleString, $key]);
+    public function updatedShowRruleGenerator(){
+        if($this->showRruleGenerator === false) {
+            $this->reset();
         }
     }
 }
