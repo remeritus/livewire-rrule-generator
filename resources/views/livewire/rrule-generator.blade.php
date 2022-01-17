@@ -1,5 +1,5 @@
 <div class="p-4 bg-gray-200">
-    <form wire:submit.prevent="processRRule" class="space-y-4">
+    <form wire:submit.prevent="processRrule" class="space-y-4">
         <section>
             <h4 class="font-bold text-2xl mb-2">
                 {{ config('livewire-rrule-generator.title') ?? 'Define Schedule' }}

@@ -12,6 +12,5 @@ return [
         'MONTHLY'   => TRUE,
         'YEARLY'    => FALSE,
     ],
-
     'defaultView'    => 'WEEKLY',
 ];
