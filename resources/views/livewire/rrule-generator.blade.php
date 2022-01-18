@@ -1,4 +1,5 @@
-<div class="p-4 bg-gray-200">
+<div class="p-4">
+    @if($editable)
     <form wire:submit.prevent="processRrule" class="space-y-4">
         <section>
             <h4 class="font-bold text-2xl mb-2">
@@ -139,13 +140,14 @@
                 </div>
             </div>
         </section>
-        {{ $humanReadable }}
-        <section class="flex justify-between">
-            <button type="button"
-                    wire:click="$toggle('showRruleGenerator')"
-                    class="p-2 px-4 text-blue-500">Close
-            </button>
+        <section class="flex justify-end">
             <button class="p-2 px-4 font-bold bg-blue-500 text-white rounded">Confirm</button>
         </section>
     </form>
+    @else
+        <div class="flex items-center justify-between">
+            <p>{{ $humanReadable }}</p>
+            <button wire:click="$toggle('editable')" class="p-4 text-blue-500">Edit</button>
+        </div>
+    @endif
 </div>

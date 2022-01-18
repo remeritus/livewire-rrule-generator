@@ -10,7 +10,7 @@ use Remeritus\LivewireRruleGenerator\Services\CalendarService;
 
 class RruleGenerator extends Component
 {
-    public ?string $childKey = '';
+    public bool $editable = true;
 
     public bool $includeWeekend = true;
     public string $defaultView = 'WEEKLY';
@@ -235,6 +235,7 @@ class RruleGenerator extends Component
     {
         $this->validate();
         $this->emit('rruleCreated', (string) $this->rruleString);
+        $this->editable = false;
     }
 
     public function updatedShowRruleGenerator(){
