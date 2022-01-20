@@ -62,7 +62,6 @@ class RruleGenerator extends Component
     protected $rules = [
         'FREQ'      => 'required',
         'BYDAY'     => 'sometimes|required',
-        'DTSTART'   => 'sometimes|required'
     ];
 
     protected $messages = [
