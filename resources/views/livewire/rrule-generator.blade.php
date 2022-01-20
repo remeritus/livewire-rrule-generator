@@ -140,7 +140,7 @@
                 </div>
             </div>
         </section>
-        <section class="flex justify-end">
+        <section class="flex justify-end ">
             <button class="p-2 px-4 font-bold bg-blue-500 text-white rounded">Confirm</button>
         </section>
     </form>

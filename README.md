@@ -15,13 +15,6 @@ You can install the package via composer:
 composer require remeritus/livewire-rrule-generator
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="livewire-rrule-generator_without_prefix-migrations"
-php artisan migrate
-```
-
 You can publish the config file with:
 ```bash
 php artisan vendor:publish --tag="livewire-rrule-generator_without_prefix-config"
@@ -37,14 +30,25 @@ This is the contents of the published config file:
 
 ```php
 return [
+    'title'         => 'Define Schedule',
+    'includeWeekend' => TRUE,
+    'frequencies' => [
+        'SECONDLY'  => FALSE,
+        'MINUTELY'  => FALSE,
+        'HOURLY'    => FALSE,
+        'DAILY'     => TRUE,
+        'WEEKLY'    => TRUE,
+        'MONTHLY'   => TRUE,
+        'YEARLY'    => FALSE,
+    ],
+    'defaultView'    => 'WEEKLY',
 ];
 ```
 
 ## Usage
 
 ```php
-$livewire-rrule-generator = new Remeritus\LivewireRruleGenerator();
-echo $livewire-rrule-generator->echoPhrase('Hello, Remeritus!');
+<livewire:rrule-generator/>
 ```
 
 ## Testing

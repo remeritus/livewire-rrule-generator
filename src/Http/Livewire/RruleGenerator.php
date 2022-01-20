@@ -205,7 +205,7 @@ class RruleGenerator extends Component
             }
         }
 
-        if ($this->STARTS !== 'NOT SPECIFIED') {
+        if ($this->STARTS !== 'NOT-SPECIFIED') {
             $rruleArray['DTSTART'] = $this->DTSTART;
         }
 

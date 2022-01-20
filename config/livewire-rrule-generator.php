@@ -3,6 +3,7 @@
 return [
     'title'         => 'Define Schedule',
     'includeWeekend' => TRUE,
+    'includeDTSTART' => TRUE,
     'frequencies' => [
         'SECONDLY'  => FALSE,
         'MINUTELY'  => FALSE,
