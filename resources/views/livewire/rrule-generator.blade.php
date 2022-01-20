@@ -1,6 +1,5 @@
 <div class="p-4">
     @if($editable)
-    <form wire:submit.prevent="processRrule" class="space-y-4">
         <section>
             <h4 class="font-bold text-2xl mb-2">
                 {{ config('livewire-rrule-generator.title') ?? 'Define Schedule' }}
@@ -141,13 +140,16 @@
             </div>
         </section>
         <section class="flex justify-end ">
-            <button class="p-2 px-4 font-bold bg-blue-500 text-white rounded">Confirm</button>
+            <button type="button"
+                    class="p-2 px-4 font-bold bg-blue-500 text-white rounded"
+                    wire:click="processRrule">Confirm</button>
         </section>
-    </form>
     @else
         <div class="flex items-center justify-between">
             <p>{{ $humanReadable }}</p>
-            <button wire:click="$toggle('editable')" class="p-4 text-blue-500">Edit</button>
+            <button type="button"
+                    wire:click="$toggle('editable')"
+                    class="p-4 text-blue-500">Edit</button>
         </div>
     @endif
 </div>
