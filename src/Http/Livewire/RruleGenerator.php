@@ -10,66 +10,72 @@ use Remeritus\LivewireRruleGenerator\Services\CalendarService;
 
 class RruleGenerator extends Component
 {
+    // config
     public bool $editable = true;
-
     public bool $includeWeekend = true;
+    public bool $includeStarts = true;
+    public bool $includeEnds = true;
     public string $defaultView = 'WEEKLY';
+    public string $hellostring = 'Hello';
 
+    // defaults
     public array $frequencies = [];
     public array $daysOfWeek = [];
-
-    public $model;
-
-    public $BYDAYDAILY = NULL;
-
     public array $months = [];
     public int $daysInMonth = 31;
-
-    public $monthlyRepetition = 'BYMONTHDAY';
-    protected $schedule;
-    public $nextDate = '';
-    public ?string $humanReadable = '';
-    public $isVisible = false;
-
-    protected $listeners = [
-        'showRruleGenerator'
-    ];
-
     public array $bySetPositions = [
         '1' => 'First',
         '2' => 'Second',
         '3' => 'Third',
         '4' => 'Fourth',
-        "last" => 'Last'];
-
-    public ?string $rruleString = '';
-
-    public string $FREQ = 'WEEKLY';
-    public $INTERVAL = 1; // used for FREQ=WEEKLY and for FREQ=MONHTLY
-
-    public ?string $DTSTART = NULL;
+        "last" => 'Last'
+    ];
     public string $STARTS = 'NOT-SPECIFIED';
     public ?string $ENDS = 'NEVER';
-    public ?int $COUNT = 1;
-    public ?string $UNTIL = NULL;
 
-    public $BYSETPOS = NULL;
-    public $BYDAY = NULL;
-    public $BYMONTH = NULL;
-    public $BYMONTHDAY = NULL;
+    public $monthlyRepetition = 'BYMONTHDAY';
+    public array $BYDAYLIST = [];
 
+    public array $rruleArray = [
+        'DTSTART' => NULL,
+        'FREQ' => 'WEEKLY',
+        'UNTIL' => NULL,
+        'COUNT' => 1,
+        'INTERVAL' => 1,
+        "BYSECOND" => NULL,
+        "BYMINUTE" => NULL,
+        "BYHOUR" => NULL,
+        'BYDAY' => NULL,
+        'BYMONTHDAY' => NULL,
+        "BYYEARDAY" => NULL,
+        "BYWEEKNO" => NULL,
+        'BYMONTH' => NULL,
+        'BYSETPOS' => NULL,
+        "WKST" => "MO",
+    ];
+
+    public ?string $humanReadable = '';
+    public ?string $rruleString = '';
 
     protected $rules = [
-        'FREQ'      => 'required',
-        'BYDAY'     => 'sometimes|required',
+        'rruleArray.FREQ' => 'required',
+        'rruleArray.BYDAY' => 'sometimes|required'
     ];
 
     protected $messages = [
-        'BYDAY.required' => 'Please select the day.',
+        'rruleArray.BYDAY.required' => 'Please select the day.',
     ];
 
-    public function mount(): void
+    protected $listeners = [
+        'showRruleGenerator'
+    ];
+
+    public function mount(string $rruleString = ''): void
     {
+        if (!empty($rruleString)) {
+            $rrule = new RRule($rruleString);
+            $this->rruleArray = $rrule->getRule();
+        }
         $this->getConfigDefaults();
         $this->getCalendarDefaults();
     }
@@ -77,16 +83,9 @@ class RruleGenerator extends Component
     private function getConfigDefaults(): void
     {
         $this->setDaysOfWeek();
+        $this->setWeekStarts();
         $this->setFrequencies();
         $this->setView();
-    }
-
-    private function setModel(string $modelName, ?int $modelId): void
-    {
-        if(!empty($modelName) && !empty($modelId)) {
-            $modelPath = config('livewire-rrule-generator.modelsLocation') . $modelName;
-            $this->model = ($modelPath::where('id', $modelId)->first());
-        }
     }
 
     private function getCalendarDefaults(): void
@@ -96,14 +95,20 @@ class RruleGenerator extends Component
 
     private function setDaysOfWeek(): void
     {
-        $this->includeWeekend = $this->includeWeekend ?? config('livewire-rrule-generator.includeWeekend');
+        $this->includeWeekend = $this->includeWeekend ??
+                                config('livewire-rrule-generator.includeWeekend');
         $this->daysOfWeek = (new CalendarService())->getDaysOfTheWeek($this->includeWeekend);
+    }
+
+    private function setWeekStarts(): void
+    {
+        $this->rruleArray['WKST'] = config('livewire-rrule-generator.weekStarts') ?? 'MO';
     }
 
     private function setView(): void
     {
         $this->defaultView = $this->defaultView ?? config('livewire-rrule-generator.defaultView');
-        $this->FREQ = $this->defaultView;
+        $this->rruleArray['FREQ'] = $this->defaultView;
     }
 
     private function setMonths(): void
@@ -130,98 +135,86 @@ class RruleGenerator extends Component
         $this->frequencies = $this->getConfigFrequencies();
     }
 
-
-    public function updated(): void
+    public function updatedBydaylist()
     {
-        $rruleArray = [];
+        // to prevent strange bug where on selection
+        // of first checkbox it produces [0 => '1']
+        // instead of [0 => 'MO']
+        if (isset($this->BYDAYLIST[0]) && $this->BYDAYLIST[0] == '1') {
+            $this->BYDAYLIST[0] = 'MO';
+        }
 
-        if (isset($this->FREQ)) {
+        $this->rruleArray['BYDAY'] = implode(',', $this->BYDAYLIST);
+    }
 
-            $rruleArray['FREQ'] = $this->FREQ;
+    public function updatedFreq()
+    {
+        $FREQ = $this->rruleArray['FREQ'];
+        $this->rruleArray['BYDAY'] = NULL;
+        $this->BYDAYLIST = [];
 
-            if ($this->FREQ == 'WEEKLY') {
+        if ($FREQ === 'WEEKLY') {
 
-                $rruleArray['INTERVAL'] = $this->INTERVAL;
+            $this->rruleArray['BYMONTHDAY'] = NULL;
+            $this->rruleArray['BYSETPOS'] = NULL;
 
-                if (isset($this->BYDAY)) {
-                    $rruleArray['BYDAY'] = $this->BYDAY;
-                }
+        } elseif ($FREQ === 'DAILY') {
 
-                $rruleArray['BYMONTHDAY'] = NULL;
-                $rruleArray['BYSETPOS'] = NULL;
+            $this->rruleArray['INTERVAL'] = 1;
 
+        } elseif ($FREQ === 'MONTHLY') {
 
-            } elseif ($this->FREQ === 'DAILY') {
-                $this->INTERVAL = 1;
+            if ($this->monthlyRepetition === 'BYMONTHDAY') {
 
-                if ($this->BYDAY !== NULL) {
-                    $this->BYDAYDAILY = implode(', ', $this->BYDAY);
+                $this->rruleArray['BYSETPOS'] = NULL;
+                $this->rruleArray['BYDAY'] = NULL;
 
-                    $rruleArray['BYDAY'] = $this->BYDAYDAILY;
-                }
-
-            } elseif ($this->FREQ === 'MONTHLY') {
-
-                if (isset($this->INTERVAL)) {
-                    $rruleArray['INTERVAL'] = $this->INTERVAL;
-                }
-
-                if ($this->monthlyRepetition === 'BYMONTHDAY') {
-
-                    // FREQ=MONTHLY eg. on day (1-31)
-                    if (isset($this->BYMONTHDAY)) {
-                        $rruleArray['BYMONTHDAY'] = $this->BYMONTHDAY;
-                    }
-
-                    $rruleArray['BYSETPOS'] = NULL;
-                    $rruleArray['BYDAY'] = NULL;
-
-                }  else {
-                    // FREQ=MONTHLY eg on (first, second,..., last)
-                    if (isset($this->BYSETPOS)) {
-                        if ($this->BYSETPOS === 'last') {
-                            $rruleArray['BYSETPOS'] = -1;
-                        } else {
-                            $rruleArray['BYSETPOS'] = $this->BYSETPOS;
-                        }
-                    }
-
-                    if (isset($this->BYDAY)) {
-                        $rruleArray['BYDAY'] = $this->BYDAY;
-                    }
+            } else {
+                // FREQ=MONTHLY eg on (first, second,..., last)
+                $this->rruleArray['BYMONTHDAY'] = NULL;
+                if ($this->rruleArray['BYSETPOS'] === 'last') {
+                    $this->rruleArray['BYSETPOS'] = -1;
                 }
             }
         }
+    }
 
+    public function updatedEnds()
+    {
         if ($this->ENDS !== 'NEVER') {
 
-            if ($this->ENDS === 'AFTER') {
-                $rruleArray['COUNT'] = $this->COUNT;
-            }
+            $this->rruleArray['COUNT'] = NULL;
+            $this->rruleArray['UNTIL'] = NULL;
 
-            if ($this->ENDS === 'ON') {
-                $rruleArray['UNTIL'] = $this->UNTIL;
-            }
         }
 
-        if ($this->STARTS !== 'NOT-SPECIFIED') {
-            $rruleArray['DTSTART'] = $this->DTSTART;
+        if ($this->ENDS === 'AFTER') {
+
+            $this->rruleArray['UNTIL'] = null;
+
         }
 
-        $rrule = new RRule($rruleArray);
-        $this->rruleString = $rrule->rfcString();
-        $this->humanReadable = $rrule->humanReadable([
-            'include_start' => true,
-        ]);
+        if ($this->ENDS === 'ON') {
+
+            $this->rruleArray['COUNT'] = NULL;
+
+        }
+    }
+
+    public function updatedStarts()
+    {
+        if ($this->STARTS === 'NOT-SPECIFIED') {
+            $this->rruleArray['DTSTART'] = NULL;
+        }
     }
 
     public function updatedMonthlyRepetition(): void
     {
         if ($this->monthlyRepetition == 'BYMONTHDAY') {
-            $this->BYSETPOS = NULL;
-            $this->BYDAY = NULL;
+            $this->rruleArray['BYSETPOS'] = NULL;
+            $this->rruleArray['BYDAY'] = NULL;
         } else {
-            $this->BYMONTHDAY = NULL;
+            $this->rruleArray['BYMONTHDAY'] = NULL;
         }
     }
 
@@ -230,15 +223,33 @@ class RruleGenerator extends Component
         return view('livewire-rrule-generator::livewire.rrule-generator');
     }
 
+    public function preprocess()
+    {
+        if ($this->ENDS == 'NEVER') {
+            $this->rruleArray['UNTIL'] = null;
+            $this->rruleArray['COUNT'] = null;
+        } elseif ($this->rruleArray['UNTIL'] != null) {
+            $this->rruleArray['COUNT'] = null;
+        }
+    }
+
     public function processRrule(): void
     {
         $this->validate();
-        $this->emit('rruleCreated', (string) $this->rruleString);
+        $this->preprocess();
+
+        $rrule = new RRule($this->rruleArray);
+
+        $this->rruleString = $rrule->rfcString();
+        $this->humanReadable = $rrule->humanReadable();
+
+        $this->emit('rruleCreated', (string)$this->rruleString);
         $this->editable = false;
     }
 
-    public function updatedShowRruleGenerator(){
-        if($this->showRruleGenerator === false) {
+    public function updatedShowRruleGenerator()
+    {
+        if ($this->showRruleGenerator === false) {
             $this->reset();
         }
     }

@@ -14,4 +14,5 @@ return [
         'YEARLY'    => FALSE,
     ],
     'defaultView'    => 'WEEKLY',
+    'weeekStarts'   => 'MO'
 ];
