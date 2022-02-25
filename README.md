@@ -5,7 +5,10 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/remeritus/livewire-rrule-generator/Check%20&%20fix%20styling?label=code%20style)](https://github.com/remeritus/livewire-rrule-generator/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/remeritus/livewire-rrule-generator.svg?style=flat-square)](https://packagist.org/packages/remeritus/livewire-rrule-generator)
 
-Generate RRule Strings using Livewire.
+Livewire Rrule Generator is a GUI for `rlanvin/php-rrule`. It gerates `RRULE` from [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545) complaint strings that can be used to manage recurring events. 
+
+Functionality is limited to Daily/Weekly/Monthly/Yearly rrules and GUI mimics Google Calendar approach.
+
 
 ## Installation
 
@@ -20,11 +23,6 @@ You can publish the config file with:
 php artisan vendor:publish --tag="livewire-rrule-generator_without_prefix-config"
 ```
 
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="example-views"
-```
 
 This is the content of the published config file:
 
@@ -33,13 +31,10 @@ return [
     'title'         => 'Define Schedule',
     'includeWeekend' => TRUE,
     'frequencies' => [
-        'SECONDLY'  => FALSE,
-        'MINUTELY'  => FALSE,
-        'HOURLY'    => FALSE,
         'DAILY'     => TRUE,
         'WEEKLY'    => TRUE,
         'MONTHLY'   => TRUE,
-        'YEARLY'    => FALSE,
+        'YEARLY'    => TRUE,
     ],
     'defaultView'   => 'WEEKLY',
     'weekStarts'    => 'MO',
@@ -47,9 +42,14 @@ return [
 ```
 
 ## Usage
-
+### To Create new RRule
 ```php
 <livewire:rrule-generator/>
+```
+### To Edit existing RRule for RFC String
+If you want to edit existing RRule you can pass it to `rrule-string`
+```php
+<livewire:rrule-generator rrule-string='FREQ=WEEKLY;COUNT=30;INTERVAL=1;WKST=MO' />
 ```
 
 ## Testing
