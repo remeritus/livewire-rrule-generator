@@ -95,6 +95,19 @@
                     </select>
                 </label>
             @endif
+
+            @if($rruleArray['FREQ'] === 'YEARLY')
+                <div class="mt-2">
+                    <label>
+                        Every
+                        <input type="number"
+                               wire:model="rruleArray.INTERVAL"
+                               min="1"
+                               class="p-2 w-20 rounded border">
+                        year(s)
+                    </label>
+                </div>
+            @endif
         </section>
         @if($includeStarts)
             <section>

@@ -5,13 +5,10 @@ return [
     'includeWeekend' => TRUE,
     'includeDTSTART' => TRUE,
     'frequencies' => [
-        'SECONDLY'  => FALSE,
-        'MINUTELY'  => FALSE,
-        'HOURLY'    => FALSE,
         'DAILY'     => TRUE,
         'WEEKLY'    => TRUE,
         'MONTHLY'   => TRUE,
-        'YEARLY'    => FALSE,
+        'YEARLY'    => TRUE,
     ],
     'defaultView'    => 'WEEKLY',
     'weeekStarts'   => 'MO'
