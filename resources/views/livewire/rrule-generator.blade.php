@@ -11,29 +11,21 @@
             </select>
 
             @if($rruleArray['FREQ'] === 'DAILY')
-                @error('rruleArray.BYDAY')<p class="text-red-900 text-sm font-bold">{{$message}}</p>@enderror
-                <div class="space-x-2">
-                    @foreach($daysOfWeek as $abbrevation => $label)
-                        <label>
-                            <input type="checkbox"
-                                   wire:model="BYDAYLIST"
-                                   value="{{ $abbrevation }}">
-                            {{ $abbrevation }}</label>
-                    @endforeach
+                <div class="mt-2">
+                    <label>
+                        Every
+                        <input type="number"
+                               wire:model="rruleArray.INTERVAL"
+                               min="1"
+                               class="p-2 w-20 rounded border">
+                        day(s)
+                    </label>
                 </div>
             @endif
 
             @if($rruleArray['FREQ'] === 'WEEKLY')
 
                 @error('rruleArray.BYDAY')<p class="text-red-900 text-sm font-bold">{{$message}}</p>@enderror
-                <label> on </label>
-                <select wire:model="rruleArray.BYDAY" class="p-2 rounded border">
-                    <option value="NULL" class="p-2 border rounded">-- Select day of the week --</option>
-                    @foreach($daysOfWeek as $value => $label)
-                        <option value="{{$value}}">{{$label}}</option>
-                    @endforeach
-                </select>
-
                 <div class="mt-2">
                     <label>
                         Every
@@ -43,6 +35,16 @@
                                class="p-2 w-20 rounded border">
                         week(s)
                     </label>
+                </div>
+                <div class="space-x-2">
+                    <label> on </label>
+                @foreach($daysOfWeek as $abbrevation => $label)
+                        <label>
+                            <input type="checkbox"
+                                   wire:model="BYDAYLIST"
+                                   value="{{ $abbrevation }}">
+                            {{ $abbrevation }}</label>
+                    @endforeach
                 </div>
 
             @endif

@@ -59,7 +59,7 @@ class RruleGenerator extends Component
 
     protected $rules = [
         'rruleArray.FREQ' => 'required',
-        'rruleArray.BYDAY' => 'sometimes|required'
+        'rruleArray.BYDAY' => 'required_if:rruleArray.FREQ,WEEKLY'
     ];
 
     protected $messages = [
@@ -190,7 +190,7 @@ class RruleGenerator extends Component
 
         if ($this->ENDS === 'AFTER') {
 
-            $this->rruleArray['UNTIL'] = null;
+            $this->rruleArray['UNTIL'] = NULL;
 
         }
 
@@ -223,13 +223,15 @@ class RruleGenerator extends Component
         return view('livewire-rrule-generator::livewire.rrule-generator');
     }
 
-    public function preprocess()
+    private function preprocess()
     {
         if ($this->ENDS == 'NEVER') {
-            $this->rruleArray['UNTIL'] = null;
-            $this->rruleArray['COUNT'] = null;
-        } elseif ($this->rruleArray['UNTIL'] != null) {
-            $this->rruleArray['COUNT'] = null;
+            $this->rruleArray['UNTIL'] = NULL;
+            $this->rruleArray['COUNT'] = NULL;
+        }
+
+        if ($this->rruleArray['UNTIL'] != NULL) {
+            $this->rruleArray['COUNT'] = NULL;
         }
     }
 
