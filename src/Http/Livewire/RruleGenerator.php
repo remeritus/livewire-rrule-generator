@@ -75,6 +75,7 @@ class RruleGenerator extends Component
         if (!empty($rruleString)) {
             $rrule = new RRule($rruleString);
             $this->rruleArray = $rrule->getRule();
+            $this->editable = false;
         }
         $this->getConfigDefaults();
         $this->getCalendarDefaults();
