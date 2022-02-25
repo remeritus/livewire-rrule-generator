@@ -26,7 +26,7 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="example-views"
 ```
 
-This is the contents of the published config file:
+This is the content of the published config file:
 
 ```php
 return [
@@ -41,7 +41,8 @@ return [
         'MONTHLY'   => TRUE,
         'YEARLY'    => FALSE,
     ],
-    'defaultView'    => 'WEEKLY',
+    'defaultView'   => 'WEEKLY',
+    'weekStarts'    => 'MO',
 ];
 ```
 
