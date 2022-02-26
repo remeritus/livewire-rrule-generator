@@ -182,6 +182,7 @@
     @else
         <div class="flex items-center justify-between">
             <p>{{ $humanReadable }}</p>
+            <input type="hidden" wire:model="rruleString" name="rrule_string">
             <button type="button"
                     wire:click="$toggle('editable')"
                     class="p-4 text-blue-500">Edit
