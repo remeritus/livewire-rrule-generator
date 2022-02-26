@@ -1,4 +1,6 @@
-# Livewire RRule Generator
+<p align="center">
+<img src="livewire-rrule-generator-logo.png" width="640px" alt="">
+</p>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/remeritus/livewire-rrule-generator.svg?style=flat-square)](https://packagist.org/packages/remeritus/livewire-rrule-generator)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/remeritus/livewire-rrule-generator/run-tests?label=tests)](https://github.com/remeritus/livewire-rrule-generator/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -42,33 +44,43 @@ return [
 ```
 
 ## Usage
-### To Create new RRule
+### In your views
+#### If you want to create new Rrule string
 ```php
 <livewire:rrule-generator/>
 ```
-### To Edit existing RRule for RFC String
+#### If you want to edit existing Rrule string
 If you want to edit existing RRule you can pass it to `rrule-string`
 ```php
-<livewire:rrule-generator rrule-string='FREQ=WEEKLY;COUNT=30;INTERVAL=1;WKST=MO' />
+<livewire:rrule-generator rrule-string='FREQ=WEEKLY;COUNT=30;INTERVAL=1' />
 ```
+### Accessing  RRule String
+- There is an `<input type="hidden" ... name="rrule_string"/>` from which you can extract the RRule String. So if you place `<livewire:rrule-generator/>` within a form it will be part of the forms data. 
+- You can also listen to livewire event `rruleCreated`, which emits RRule String on Rrule's creation.
 
-## Testing
+[//]: # (## Testing)
 
-```bash
-composer test
-```
+[//]: # ()
+[//]: # (```bash)
 
-## Changelog
+[//]: # (composer test)
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+[//]: # (```)
 
-## Contributing
+[//]: # (## Changelog)
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+[//]: # ()
+[//]: # (Please see [CHANGELOG]&#40;CHANGELOG.md&#41; for more information on what has changed recently.)
 
-## Security Vulnerabilities
+[//]: # (## Contributing)
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+[//]: # ()
+[//]: # (Please see [CONTRIBUTING]&#40;.github/CONTRIBUTING.md&#41; for details.)
+
+[//]: # (## Security Vulnerabilities)
+
+[//]: # ()
+[//]: # (Please review [our security policy]&#40;../../security/policy&#41; on how to report security vulnerabilities.)
 
 ## Credits
 
