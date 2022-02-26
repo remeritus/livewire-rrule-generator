@@ -1,5 +1,5 @@
 <p align="center">
-<img src="livewire-rrule-generator-logo.png" width="640px" alt="">
+<img src="./docs/assets/livewire-rrule-generator-logo.png" width="640px" alt="">
 </p>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/remeritus/livewire-rrule-generator.svg?style=flat-square)](https://packagist.org/packages/remeritus/livewire-rrule-generator)
@@ -10,7 +10,6 @@
 Livewire Rrule Generator is a GUI for `rlanvin/php-rrule`. It gerates `RRULE` from [RFC 5545](https://datatracker.ietf.org/doc/html/rfc5545) complaint strings that can be used to manage recurring events. 
 
 Functionality is limited to Daily/Weekly/Monthly/Yearly rrules and GUI mimics Google Calendar approach.
-
 
 ## Installation
 
