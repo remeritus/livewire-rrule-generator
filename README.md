@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./docs/assets/livewire-rrule-generator-logo.png" width="640px" alt="">
+<img src="./docs/images/livewire-rrule-generator-logo.png" width="512px" alt="Livewire RRule Generator">
 </p>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/remeritus/livewire-rrule-generator.svg?style=flat-square)](https://packagist.org/packages/remeritus/livewire-rrule-generator)
