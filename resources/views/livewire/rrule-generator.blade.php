@@ -1,9 +1,7 @@
 <div class="p-4">
     @if($editable)
         <section>
-            <h4 class="font-bold text-2xl mb-2">
-                {{ config('livewire-rrule-generator.title') ?? __('Define Schedule') }}
-            </h4>
+            <h4 class="font-bold text-2xl mb-2">{{ config('livewire-rrule-generator.title') ?? 'Define Schedule' }}</h4>
             <select wire:model="rruleArray.FREQ" class="p-2 rounded border">
                 @foreach($frequencies as $frequency)
                     <option value="{{$frequency}}">{{$frequency}}</option>
@@ -17,8 +15,7 @@
                         <input type="number"
                                wire:model="rruleArray.INTERVAL"
                                min="1"
-                               class="p-2 w-20 rounded border">
-                        day(s)
+                               class="p-2 w-20 rounded border"> {{ Str::plural('day', $rruleArray['INTERVAL']) }}
                     </label>
                 </div>
             @endif
@@ -32,8 +29,7 @@
                         <input type="number"
                                wire:model="rruleArray.INTERVAL"
                                min="1"
-                               class="p-2 w-20 rounded border">
-                        week(s)
+                               class="p-2 w-20 rounded border"> {{ Str::plural('week', $rruleArray['INTERVAL']) }}
                     </label>
                 </div>
                 <div class="space-x-2">
@@ -55,7 +51,7 @@
                                  step="1"
                                  min="1"
                                  wire:model="rruleArray.INTERVAL"
-                                 class="p-2 rounded border"> month(s)
+                                 class="p-2 rounded border"> {{ Str::plural('month', $rruleArray['INTERVAL']) }}
                 </label>
                 <label class="block mb-4
                               {{ $monthlyRepetition == 'BYSET' ? 'opacity-30' : '' }}
@@ -103,8 +99,7 @@
                         <input type="number"
                                wire:model="rruleArray.INTERVAL"
                                min="1"
-                               class="p-2 w-20 rounded border">
-                        year(s)
+                               class="p-2 w-20 rounded border"> {{ Str::plural('year', $rruleArray['INTERVAL']) }}
                     </label>
                 </div>
             @endif

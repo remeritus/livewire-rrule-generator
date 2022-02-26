@@ -63,7 +63,7 @@ class RruleGenerator extends Component
     ];
 
     protected $messages = [
-        'rruleArray.BYDAY.required' => 'Please select the day.',
+        'rruleArray.BYDAY.required_if' => 'Please select at least 1 day.',
     ];
 
     protected $listeners = [
