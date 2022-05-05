@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/contracts": "^8.73",
+        "illuminate/contracts": "9.*",
         "livewire/livewire": "^2.8",
         "rlanvin/php-rrule": "^2.3",
         "spatie/laravel-package-tools": "^1.9.2"
