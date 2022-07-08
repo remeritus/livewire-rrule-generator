@@ -159,6 +159,7 @@ class RruleGenerator extends Component
         } elseif ($FREQ === 'DAILY') {
 
             $this->rruleArray['INTERVAL'] = 1;
+            $this->rruleArray['BYDAY'] = NULL;
 
         } elseif ($FREQ === 'MONTHLY') {
 
@@ -170,9 +171,6 @@ class RruleGenerator extends Component
             } else {
                 // FREQ=MONTHLY eg on (first, second,..., last)
                 $this->rruleArray['BYMONTHDAY'] = NULL;
-                if ($this->rruleArray['BYSETPOS'] === 'last') {
-                    $this->rruleArray['BYSETPOS'] = -1;
-                }
             }
         }
     }
@@ -235,7 +233,6 @@ class RruleGenerator extends Component
         if (isset($this->monthlyRepetitionFrequency) && isset($this->monthlyRepetitionDay)){
             $this->rruleArray['BYDAY'] = $this->monthlyRepetitionFrequency . $this->monthlyRepetitionDay;
         }
-
     }
 
 
