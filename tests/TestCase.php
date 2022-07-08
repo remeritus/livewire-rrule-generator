@@ -31,6 +31,7 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
+        config()->set('app.key', 'base64:MEN6dYh4I+H9slhb8LDhjZMY7bvU2Hme1EeHg9U789o=');
 
         /*
         $migration = include __DIR__.'/../database/migrations/create_livewire-rrule-generator_table.php.stub';
