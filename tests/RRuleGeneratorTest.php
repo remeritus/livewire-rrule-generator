@@ -29,7 +29,7 @@ it('will emit rruleCreated event on rrule creation', function (){
        ->assertEmitted('rruleCreated');
 });
 
-it('can repeat Every 2 months on the first Tuesday of the month', function (){
+it('can repeat every 2 months on the first Tuesday of the month', function (){
     Livewire::test(RruleGenerator::class)
         ->set('rruleArray.FREQ', 'MONTHLY')
         ->set('rruleArray.INTERVAL', '2')
@@ -39,6 +39,15 @@ it('can repeat Every 2 months on the first Tuesday of the month', function (){
         ->call('processRrule')
         ->assertEmitted('rruleCreated')
         ->assertSee('Every 2 months on the first Tuesday of the month');
+});
+
+it('can repeat every 3 days', function (){
+    Livewire::test(RruleGenerator::class)
+        ->set('rruleArray.FREQ', 'DAILY')
+        ->set('rruleArray.INTERVAL', '3')
+        ->call('processRrule')
+        ->assertEmitted('rruleCreated')
+        ->assertSee('Every 3 days');
 });
 
 it('can mount itself from RruleString', function (){
