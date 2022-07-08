@@ -54,13 +54,13 @@
                                  class="p-2 rounded border"> {{ Str::plural('month', $rruleArray['INTERVAL']) }}
                 </label>
                 <label class="block mb-4
-                              {{ $monthlyRepetition == 'BYSET' ? 'opacity-30' : '' }}
+                              {{ $monthlyRepetition == 'onThe' ? 'opacity-30' : '' }}
                               hover:opacity-100">
                     <input type="radio"
                            wire:model="monthlyRepetition"
-                           value="BYMONTHDAY"> on day
+                           value="onDay"> on day
                     <select wire:model="rruleArray.BYMONTHDAY"
-                            {{ $monthlyRepetition == 'BYSET' ? 'disabled' : '' }}
+                            {{ $monthlyRepetition == 'onThe' ? 'disabled' : '' }}
                             class="p-2 rounded border">
                         <option value="NULL">Select</option>
                         @for($day = 1; $day <= $daysInMonth; $day++)
@@ -68,23 +68,24 @@
                         @endfor
                     </select>
                 </label>
-                <label class="{{ $monthlyRepetition == 'BYMONTHDAY' ? 'opacity-30' : '' }}
+                <label class="{{ $monthlyRepetition == 'onDay' ? 'opacity-30' : '' }}
                               hover:opacity-100">
                     <input type="radio"
                            wire:model="monthlyRepetition"
-                           value="BYSET"> on the
-                    <select wire:model="rruleArray.BYSETPOS"
-                            {{ $monthlyRepetition == 'BYMONTHDAY' ? 'disabled' : ''}}
+                           value="onThe"> on the
+                    <select wire:model="monthlyRepetitionFrequency"
+                            {{ $monthlyRepetition == 'onDay' ? 'disabled' : ''}}
                             class="p-2 rounded border">
-                        <option value="NULL">Select</option>
-                        @foreach($bySetPositions as $value => $label)
-                            <option value="{{$value}}">{{$label}}</option>
-                        @endforeach
+                        <option value="">Select</option>
+                        <option value="1">First</option>
+                        <option value="2">Second</option>
+                        <option value="3">Third</option>
+                        <option value="-1">Last</option>
                     </select>
-                    <select wire:model="rruleArray.BYDAY"
-                            {{ $monthlyRepetition == 'BYMONTHDAY' ? 'disabled' : '' }}
+                    <select wire:model="monthlyRepetitionDay"
+                            {{ $monthlyRepetition == 'onDay' ? 'disabled' : '' }}
                             class="p-2 rounded border">
-                        <option value="NULL">Select</option>
+                        <option value="">Select</option>
                         @foreach($daysOfWeek as $value => $label)
                             <option value="{{$value}}">{{$label}}</option>
                         @endforeach

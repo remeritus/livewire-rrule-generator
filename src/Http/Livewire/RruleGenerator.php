@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\View\View;
 use Remeritus\LivewireRruleGenerator\Services\CalendarService;
+use function Livewire\str;
 
 class RruleGenerator extends Component
 {
@@ -16,24 +17,20 @@ class RruleGenerator extends Component
     public bool $includeStarts = true;
     public bool $includeEnds = true;
     public string $defaultView = 'WEEKLY';
-    public string $hellostring = 'Hello';
 
     // defaults
     public array $frequencies = [];
     public array $daysOfWeek = [];
     public array $months = [];
     public int $daysInMonth = 31;
-    public array $bySetPositions = [
-        '1' => 'First',
-        '2' => 'Second',
-        '3' => 'Third',
-        '4' => 'Fourth',
-        "last" => 'Last'
-    ];
+
     public string $STARTS = 'NOT-SPECIFIED';
     public ?string $ENDS = 'NEVER';
 
     public $monthlyRepetition = 'BYMONTHDAY';
+    public ?string $monthlyRepetitionFrequency = "";
+    public ?string $monthlyRepetitionDay = "";
+
     public array $BYDAYLIST = [];
 
     public array $rruleArray = [
@@ -60,7 +57,7 @@ class RruleGenerator extends Component
     protected $rules = [
         'rruleArray.FREQ' => 'required',
         'rruleArray.BYDAY' => 'required_if:rruleArray.FREQ,WEEKLY'
-    ];
+     ];
 
     protected $messages = [
         'rruleArray.BYDAY.required_if' => 'Please select at least 1 day.',
@@ -234,7 +231,14 @@ class RruleGenerator extends Component
         if ($this->rruleArray['UNTIL'] != NULL) {
             $this->rruleArray['COUNT'] = NULL;
         }
+
+        if (isset($this->monthlyRepetitionFrequency) && isset($this->monthlyRepetitionDay)){
+            $this->rruleArray['BYDAY'] = $this->monthlyRepetitionFrequency . $this->monthlyRepetitionDay;
+        }
+
     }
+
+
 
     public function processRrule(): void
     {
@@ -244,7 +248,7 @@ class RruleGenerator extends Component
         $rrule = new RRule($this->rruleArray);
 
         $this->rruleString = $rrule->rfcString();
-        $this->humanReadable = $rrule->humanReadable();
+        $this->humanReadable = str($rrule->humanReadable())->ucfirst();
 
         $this->emit('rruleCreated', (string)$this->rruleString);
         $this->editable = false;
