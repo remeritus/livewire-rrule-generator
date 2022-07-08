@@ -3,6 +3,7 @@
 namespace Remeritus\LivewireRruleGenerator\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Remeritus\LivewireRruleGenerator\LivewireRruleGeneratorServiceProvider;
 
@@ -20,8 +21,11 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            LivewireServiceProvider::class,
             LivewireRruleGeneratorServiceProvider::class,
         ];
+
+
     }
 
     public function getEnvironmentSetUp($app)
