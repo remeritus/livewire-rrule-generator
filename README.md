@@ -41,7 +41,16 @@ return [
     'weekStarts'    => 'MO',
 ];
 ```
-
+## Setup
+### TailwindCSS
+Add these additional lines into your tailwind.config.js file:
+```js
+// use `purge` instead of `content` if using TailwindCSS v2.x
+content: [
+    './vendor/remeritus/livewire-rrule-generator/resources/views/**/*.blade.php',
+    // etc...
+]
+```
 ## Usage
 ### In your views
 #### If you want to create new Rrule string
