@@ -7,7 +7,7 @@ it('has to have at least 1 day select to repeat weekly', function (){
     Livewire::test(RruleGenerator::class)
         ->set('rruleArray.FREQ', 'WEEKLY')
         ->set('rruleArray.INTERVAL', 1)
-        ->set('rruleArray.BYDAY', ['MO'])
+        ->set('BYDAYLIST', ['MO'])
         ->call('processRrule')
         ->assertHasNoErrors();
 });
@@ -15,16 +15,16 @@ it('has to have at least 1 day select to repeat weekly', function (){
 it('will fail if no day is selected for Weekly Repetition', function (){
     Livewire::test(RruleGenerator::class)
         ->set('rruleArray.FREQ', 'WEEKLY')
-        ->set('rruleArray.INTERVAL', 1)
+        ->set('rruleArray.INTERVAL', '1')
         ->call('processRrule')
-        ->assertHasErrors('rruleArray.BYDAY');
+        ->assertHasErrors(['rruleArray.BYDAY' => 'required_if']);
 });
 
 it('will emit rruleCreated event on rrule creation', function (){
    Livewire::test(RruleGenerator::class)
        ->set('rruleArray.FREQ', 'WEEKLY')
        ->set('rruleArray.INTERVAL', '1')
-       ->set('rruleArray.BYDAY', ['MO'])
+       ->set('BYDAYLIST', ['MO', 'TU'])
        ->call('processRrule')
        ->assertEmitted('rruleCreated');
 });
@@ -46,7 +46,6 @@ it('can repeat every 3 days', function (){
         ->set('rruleArray.FREQ', 'DAILY')
         ->set('rruleArray.INTERVAL', '3')
         ->call('processRrule')
-        ->assertEmitted('rruleCreated')
         ->assertSee('Every 3 days');
 });
 

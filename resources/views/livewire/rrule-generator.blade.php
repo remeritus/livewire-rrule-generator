@@ -1,96 +1,84 @@
 <div class="p-4">
     @if($editable)
-        <section>
+        <section class="space-y-2">
             <h4 class="font-bold text-2xl mb-2">{{ config('livewire-rrule-generator.title') ?? 'Define Schedule' }}</h4>
-            <select wire:model="rruleArray.FREQ" class="p-2 rounded border">
-                @foreach($frequencies as $frequency)
-                    <option value="{{$frequency}}">{{$frequency}}</option>
-                @endforeach
-            </select>
+            <div class="flex space-x-2 items-center">
+                <span>Repeat every</span>
+                <input type="number"
+                       wire:model="rruleArray.INTERVAL"
+                       min="1"
+                       class="p-2 w-20 rounded border">
+                <select wire:model="rruleArray.FREQ" class="p-2 rounded border">
+                    @foreach($frequencies as $frequency)
+                        <option value="{{ $frequency }}">
+                            {{ Str::plural($frequencyLookup[$frequency], $rruleArray['INTERVAL']) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-            @if($rruleArray['FREQ'] === 'DAILY')
-                <div class="mt-2">
-                    <label>
-                        Every
-                        <input type="number"
-                               wire:model="rruleArray.INTERVAL"
-                               min="1"
-                               class="p-2 w-20 rounded border"> {{ Str::plural('day', $rruleArray['INTERVAL']) }}
-                    </label>
-                </div>
-            @endif
 
             @if($rruleArray['FREQ'] === 'WEEKLY')
-
                 @error('rruleArray.BYDAY')<p class="text-red-900 text-sm font-bold">{{$message}}</p>@enderror
-                <div class="mt-2">
-                    <label>
-                        Every
-                        <input type="number"
-                               wire:model="rruleArray.INTERVAL"
-                               min="1"
-                               class="p-2 w-20 rounded border"> {{ Str::plural('week', $rruleArray['INTERVAL']) }}
-                    </label>
-                </div>
-                <div class="space-x-2">
-                    <label> on </label>
-                @foreach($daysOfWeek as $abbrevation => $label)
+                <div class="space-x-1">
+                    <label>on </label>
+                    @foreach($daysOfWeek as $abbrevation => $label)
                         <label>
                             <input type="checkbox"
+                                   class="hidden peer"
                                    wire:model="BYDAYLIST"
                                    value="{{ $abbrevation }}">
-                            {{ $abbrevation }}</label>
+                            <span class="text-sm bg-gray-100 px-2 p-1 transition rounded-md inline-block
+                                      peer-checked:bg-blue-500 peer-checked:text-white
+                                      hover:bg-blue-400 hover:text-white cursor-pointer">
+                                {{ $abbrevation }}
+                            </span>
+                        </label>
                     @endforeach
                 </div>
-
             @endif
 
             @if($rruleArray['FREQ'] == 'MONTHLY')
-                <label>
-                    Every <input type="number"
-                                 step="1"
-                                 min="1"
-                                 wire:model="rruleArray.INTERVAL"
-                                 class="p-2 rounded border"> {{ Str::plural('month', $rruleArray['INTERVAL']) }}
-                </label>
-                <label class="block mb-4
+                <div class="space-y-1">
+                    <label class="block mb-4
                               {{ $monthlyRepetition == 'onThe' ? 'opacity-30' : '' }}
                               hover:opacity-100">
-                    <input type="radio"
-                           wire:model="monthlyRepetition"
-                           value="onDay"> on day
-                    <select wire:model="rruleArray.BYMONTHDAY"
-                            {{ $monthlyRepetition == 'onThe' ? 'disabled' : '' }}
-                            class="p-2 rounded border">
-                        <option value="NULL">Select</option>
-                        @for($day = 1; $day <= $daysInMonth; $day++)
-                            <option value="{{$day}}">{{$day}}</option>
-                        @endfor
-                    </select>
-                </label>
-                <label class="{{ $monthlyRepetition == 'onDay' ? 'opacity-30' : '' }}
+                        <input type="radio"
+                               wire:model="monthlyRepetition"
+                               value="onDay"> on day
+                        <select wire:model="rruleArray.BYMONTHDAY"
+                                {{ $monthlyRepetition == 'onThe' ? 'disabled' : '' }}
+                                class="p-2 rounded border">
+                            <option value="NULL">Select</option>
+                            @for($day = 1; $day <= $daysInMonth; $day++)
+                                <option value="{{$day}}">{{$day}}</option>
+                            @endfor
+                        </select>
+                    </label>
+                    <label class="{{ $monthlyRepetition == 'onDay' ? 'opacity-30' : '' }}
                               hover:opacity-100">
-                    <input type="radio"
-                           wire:model="monthlyRepetition"
-                           value="onThe"> on the
-                    <select wire:model="monthlyRepetitionFrequency"
-                            {{ $monthlyRepetition == 'onDay' ? 'disabled' : ''}}
-                            class="p-2 rounded border">
-                        <option value="">Select</option>
-                        <option value="1">First</option>
-                        <option value="2">Second</option>
-                        <option value="3">Third</option>
-                        <option value="-1">Last</option>
-                    </select>
-                    <select wire:model="monthlyRepetitionDay"
-                            {{ $monthlyRepetition == 'onDay' ? 'disabled' : '' }}
-                            class="p-2 rounded border">
-                        <option value="">Select</option>
-                        @foreach($daysOfWeek as $value => $label)
-                            <option value="{{$value}}">{{$label}}</option>
-                        @endforeach
-                    </select>
-                </label>
+                        <input type="radio"
+                               wire:model="monthlyRepetition"
+                               value="onThe"> on the
+                        <select wire:model="monthlyRepetitionFrequency"
+                                {{ $monthlyRepetition == 'onDay' ? 'disabled' : ''}}
+                                class="p-2 rounded border">
+                            <option value="">Select</option>
+                            <option value="1">First</option>
+                            <option value="2">Second</option>
+                            <option value="3">Third</option>
+                            <option value="-1">Last</option>
+                        </select>
+                        <select wire:model="monthlyRepetitionDay"
+                                {{ $monthlyRepetition == 'onDay' ? 'disabled' : '' }}
+                                class="p-2 rounded border">
+                            <option value="">Select</option>
+                            @foreach($daysOfWeek as $value => $label)
+                                <option value="{{$value}}">{{$label}}</option>
+                            @endforeach
+                        </select>
+                    </label>
+                </div>
             @endif
 
             @if($rruleArray['FREQ'] === 'YEARLY')

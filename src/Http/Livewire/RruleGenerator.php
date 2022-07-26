@@ -33,6 +33,13 @@ class RruleGenerator extends Component
 
     public array $BYDAYLIST = [];
 
+    public array $frequencyLookup = [
+        'DAILY' => 'day',
+        'WEEKLY' => 'week',
+        'MONTHLY' => 'month',
+        'YEARLY' => 'year',
+    ];
+
     public array $rruleArray = [
         'DTSTART' => NULL,
         'FREQ' => 'WEEKLY',
@@ -57,7 +64,7 @@ class RruleGenerator extends Component
     protected $rules = [
         'rruleArray.FREQ' => 'required',
         'rruleArray.BYDAY' => 'required_if:rruleArray.FREQ,WEEKLY'
-     ];
+    ];
 
     protected $messages = [
         'rruleArray.BYDAY.required_if' => 'Please select at least 1 day.',
@@ -94,7 +101,7 @@ class RruleGenerator extends Component
     private function setDaysOfWeek(): void
     {
         $this->includeWeekend = $this->includeWeekend ??
-                                config('livewire-rrule-generator.includeWeekend');
+            config('livewire-rrule-generator.includeWeekend');
         $this->daysOfWeek = (new CalendarService())->getDaysOfTheWeek($this->includeWeekend);
     }
 
@@ -145,7 +152,7 @@ class RruleGenerator extends Component
         $this->rruleArray['BYDAY'] = implode(',', $this->BYDAYLIST);
     }
 
-    public function updatedFreq()
+    public function updatedRruleArray()
     {
         $FREQ = $this->rruleArray['FREQ'];
         $this->rruleArray['BYDAY'] = NULL;
@@ -158,7 +165,6 @@ class RruleGenerator extends Component
 
         } elseif ($FREQ === 'DAILY') {
 
-            $this->rruleArray['INTERVAL'] = 1;
             $this->rruleArray['BYDAY'] = NULL;
 
         } elseif ($FREQ === 'MONTHLY') {
@@ -230,11 +236,16 @@ class RruleGenerator extends Component
             $this->rruleArray['COUNT'] = NULL;
         }
 
-        if (isset($this->monthlyRepetitionFrequency) && isset($this->monthlyRepetitionDay)){
+        if (isset($this->monthlyRepetitionFrequency) && isset($this->monthlyRepetitionDay)) {
             $this->rruleArray['BYDAY'] = $this->monthlyRepetitionFrequency . $this->monthlyRepetitionDay;
+        } else {
         }
-    }
 
+        if ($this->rruleArray['FREQ'] === 'WEEKLY') {
+            $this->updatedBydaylist();
+        }
+
+    }
 
 
     public function processRrule(): void
@@ -248,6 +259,7 @@ class RruleGenerator extends Component
         $this->humanReadable = str($rrule->humanReadable())->ucfirst();
 
         $this->emit('rruleCreated', (string)$this->rruleString);
+        
         $this->editable = false;
     }
 
