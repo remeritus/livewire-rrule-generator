@@ -53,3 +53,26 @@ it('can mount itself from RruleString', function (){
    Livewire::test(RruleGenerator::class, ['rruleString' => 'FREQ=WEEKLY;COUNT=30;INTERVAL=1'])
        ->assertSee('Edit');
 });
+
+it('will pass key together with rruleCreated event if it is set', function () {
+    Livewire::test(RruleGenerator::class, ['key' => 5])
+        ->set('rruleArray.FREQ', 'MONTHLY')
+        ->set('rruleArray.INTERVAL', '2')
+        ->set('monthlyRepetition', 'onThe')
+        ->set('monthlyRepetitionFrequency', '1')
+        ->set('monthlyRepetitionDay', 'TU')
+        ->call('processRrule')
+        ->assertEmitted('rruleCreated', 'FREQ=MONTHLY;INTERVAL=2;BYDAY=1TU', 5);
+});
+
+it('will not pass key together with rruleCreated event if it is not set', function () {
+    Livewire::test(RruleGenerator::class)
+        ->set('rruleArray.FREQ', 'MONTHLY')
+        ->set('rruleArray.INTERVAL', '2')
+        ->set('monthlyRepetition', 'onThe')
+        ->set('monthlyRepetitionFrequency', '1')
+        ->set('monthlyRepetitionDay', 'TU')
+        ->call('processRrule')
+        ->assertEmitted('rruleCreated', 'FREQ=MONTHLY;INTERVAL=2;BYDAY=1TU', NULL);
+});
+

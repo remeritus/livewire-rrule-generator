@@ -31,6 +31,7 @@ class RruleGenerator extends Component
     public ?string $monthlyRepetitionFrequency = "";
     public ?string $monthlyRepetitionDay = "";
 
+    public ?int $key = NULL;
     public array $BYDAYLIST = [];
 
     public array $frequencyLookup = [
@@ -238,7 +239,6 @@ class RruleGenerator extends Component
 
         if (isset($this->monthlyRepetitionFrequency) && isset($this->monthlyRepetitionDay)) {
             $this->rruleArray['BYDAY'] = $this->monthlyRepetitionFrequency . $this->monthlyRepetitionDay;
-        } else {
         }
 
         if ($this->rruleArray['FREQ'] === 'WEEKLY') {
@@ -258,8 +258,8 @@ class RruleGenerator extends Component
         $this->rruleString = $rrule->rfcString();
         $this->humanReadable = str($rrule->humanReadable())->ucfirst();
 
-        $this->emit('rruleCreated', (string)$this->rruleString);
-        
+        $this->emit('rruleCreated', (string)$this->rruleString, $this->key ?? NULL );
+
         $this->editable = false;
     }
 
