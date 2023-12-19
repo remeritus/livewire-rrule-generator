@@ -94,7 +94,7 @@
             @endif
         </section>
         @if($includeStarts)
-            <section>
+            <section class="mt-4">
                 <h5 class="font-bold">Starts</h5>
                 <label>
                     <input type="radio"
@@ -162,7 +162,7 @@
                 </div>
             </section>
         @endif
-        <section class="flex justify-end ">
+        <section class="flex justify-end mt-4">
             <button type="button"
                     class="p-2 px-4 font-bold bg-blue-500 text-white rounded"
                     wire:click="processRrule">Confirm

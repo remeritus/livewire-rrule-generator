@@ -2,8 +2,8 @@
 
 namespace Remeritus\LivewireRruleGenerator\Http\Livewire;
 
+use Illuminate\Support\Facades\Validator;
 use RRule\RRule;
-use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\View\View;
 use Remeritus\LivewireRruleGenerator\Services\CalendarService;
@@ -60,15 +60,6 @@ class RruleGenerator extends Component
 
     public ?string $humanReadable = '';
     public ?string $rruleString = '';
-
-    protected $rules = [
-        'rruleArray.FREQ' => 'required',
-        'rruleArray.BYDAY' => 'required_if:rruleArray.FREQ,WEEKLY'
-    ];
-
-    protected $messages = [
-        'rruleArray.BYDAY.required_if' => 'Please select at least 1 day.',
-    ];
 
     protected $listeners = [
         'showRruleGenerator'
@@ -246,10 +237,22 @@ class RruleGenerator extends Component
 
     }
 
+    protected function validateRruleArray(): void
+    {
+        $messages = [
+            'rruleArray.BYDAY.required_if' => 'Please select at least 1 day.',
+        ];
+
+        Validator::make(['rruleArray' => $this->rruleArray], [
+            'rruleArray.FREQ' => 'required',
+            'rruleArray.BYDAY' => 'required_if:rruleArray.FREQ,WEEKLY',
+        ], $messages)->validate();
+    }
+
 
     public function processRrule(): void
     {
-        $this->validate();
+        $this->validateRruleArray();
         $this->preprocess();
 
         $rrule = new RRule($this->rruleArray);
@@ -257,7 +260,7 @@ class RruleGenerator extends Component
         $this->rruleString = $rrule->rfcString();
         $this->humanReadable = str($rrule->humanReadable())->ucfirst();
 
-        $this->emitUp('rruleCreated', (string) $this->rruleString);
+        $this->dispatch('rruleCreated', (string) $this->rruleString);
 
         $this->editable = false;
     }
