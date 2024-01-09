@@ -259,8 +259,11 @@ class RruleGenerator extends Component
 
         $this->rruleString = $rrule->rfcString();
         $this->humanReadable = str($rrule->humanReadable())->ucfirst();
-
-        $this->dispatch('rruleCreated', (string) $this->rruleString);
+        
+        $this->dispatch('rruleCreated', [
+            'rruleString'    => (string) $this->rruleString,
+            'humanReadable' => (string) $this->humanReadable
+        ]);
 
         $this->editable = false;
     }
