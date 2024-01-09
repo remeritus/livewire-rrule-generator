@@ -60,17 +60,25 @@ class RruleGenerator extends Component
 
     public ?string $humanReadable = '';
     public ?string $rruleString = '';
+    public array $params = [];
 
     protected $listeners = [
         'showRruleGenerator'
     ];
 
-    public function mount(string $rruleString = ''): void
+    public function mount(
+        string $rruleString = '',
+        array $params = []
+    ): void
     {
         if (!empty($rruleString)) {
             $rrule = new RRule($rruleString);
             $this->rruleArray = $rrule->getRule();
             $this->editable = false;
+        }
+
+        if (!empty($params)){
+            $this->params = $params;
         }
         $this->getConfigDefaults();
         $this->getCalendarDefaults();
@@ -259,10 +267,11 @@ class RruleGenerator extends Component
 
         $this->rruleString = $rrule->rfcString();
         $this->humanReadable = str($rrule->humanReadable())->ucfirst();
-        
+
         $this->dispatch('rruleCreated', [
             'rruleString'    => (string) $this->rruleString,
-            'humanReadable' => (string) $this->humanReadable
+            'humanReadable' => (string) $this->humanReadable,
+            'params'        => $this->params,
         ]);
 
         $this->editable = false;
