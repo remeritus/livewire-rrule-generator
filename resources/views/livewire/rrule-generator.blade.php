@@ -5,10 +5,10 @@
             <div class="flex space-x-2 items-center">
                 <span>Repeat every</span>
                 <input type="number"
-                       wire:model="rruleArray.INTERVAL"
+                       wire:model.live="rruleArray.INTERVAL"
                        min="1"
                        class="p-2 w-20 rounded border">
-                <select wire:model="rruleArray.FREQ" class="p-2 rounded border">
+                <select wire:model.live="rruleArray.FREQ" class="p-2 rounded border">
                     @foreach($frequencies as $frequency)
                         <option value="{{ $frequency }}">
                             {{ Str::plural($frequencyLookup[$frequency], $rruleArray['INTERVAL']) }}
@@ -26,7 +26,7 @@
                         <label>
                             <input type="checkbox"
                                    class="hidden peer"
-                                   wire:model="BYDAYLIST"
+                                   wire:model.live="BYDAYLIST"
                                    value="{{ $abbrevation }}">
                             <span class="text-sm bg-gray-100 px-2 p-1 transition rounded-md inline-block
                                       peer-checked:bg-blue-500 peer-checked:text-white
@@ -44,9 +44,9 @@
                               {{ $monthlyRepetition == 'onThe' ? 'opacity-30' : '' }}
                               hover:opacity-100">
                         <input type="radio"
-                               wire:model="monthlyRepetition"
+                               wire:model.live="monthlyRepetition"
                                value="onDay"> on day
-                        <select wire:model="rruleArray.BYMONTHDAY"
+                        <select wire:model.live="rruleArray.BYMONTHDAY"
                                 {{ $monthlyRepetition == 'onThe' ? 'disabled' : '' }}
                                 class="p-2 rounded border">
                             <option value="NULL">Select</option>
@@ -58,9 +58,9 @@
                     <label class="{{ $monthlyRepetition == 'onDay' ? 'opacity-30' : '' }}
                               hover:opacity-100">
                         <input type="radio"
-                               wire:model="monthlyRepetition"
+                               wire:model.live="monthlyRepetition"
                                value="onThe"> on the
-                        <select wire:model="monthlyRepetitionFrequency"
+                        <select wire:model.live="monthlyRepetitionFrequency"
                                 {{ $monthlyRepetition == 'onDay' ? 'disabled' : ''}}
                                 class="p-2 rounded border">
                             <option value="">Select</option>
@@ -69,7 +69,7 @@
                             <option value="3">Third</option>
                             <option value="-1">Last</option>
                         </select>
-                        <select wire:model="monthlyRepetitionDay"
+                        <select wire:model.live="monthlyRepetitionDay"
                                 {{ $monthlyRepetition == 'onDay' ? 'disabled' : '' }}
                                 class="p-2 rounded border">
                             <option value="">Select</option>
@@ -86,7 +86,7 @@
                     <label>
                         Every
                         <input type="number"
-                               wire:model="rruleArray.INTERVAL"
+                               wire:model.live="rruleArray.INTERVAL"
                                min="1"
                                class="p-2 w-20 rounded border"> {{ Str::plural('year', $rruleArray['INTERVAL']) }}
                     </label>
@@ -98,13 +98,13 @@
                 <h5 class="font-bold">Starts</h5>
                 <label>
                     <input type="radio"
-                           wire:model="STARTS"
+                           wire:model.live="STARTS"
                            value="NOT-SPECIFIED"><span> Not specified</span>
                 </label>
                 <div>
                     <label>
                         <input type="radio"
-                               wire:model="STARTS"
+                               wire:model.live="STARTS"
                                value="CUSTOM"><span> On </span>
                     </label>
 
@@ -112,7 +112,7 @@
                         @error('rruleArray.DTSTART')<span class="text-red-900 text-sm font-bold"></span>@enderror
                         <input type="date"
                                {{ $STARTS !== 'CUSTOM' ? 'disabled' : '' }}
-                               wire:model="rruleArray.DTSTART"
+                               wire:model.live="rruleArray.DTSTART"
                                class="p-2 rounded border">
                     </label>
                 </div>
@@ -124,19 +124,19 @@
                 <div class="space-y-2">
                     <label>
                         <input type="radio"
-                               wire:model="ENDS"
+                               wire:model.live="ENDS"
                                value="NEVER"> <span> Never</span>
                     </label>
 
                     <div>
                         <label>
                             <input type="radio"
-                                   wire:model="ENDS"
+                                   wire:model.live="ENDS"
                                    value="ON"><span> On</span>
                         </label>
 
                         <input type="date"
-                               wire:model="rruleArray.UNTIL"
+                               wire:model.live="rruleArray.UNTIL"
                                class="p-2 rounded border"
                             {{ $ENDS !== 'ON' ? 'disabled' : '' }}>
                     </div>
@@ -145,13 +145,13 @@
 
                         <label>
                             <input type="radio"
-                                   wire:model="ENDS"
+                                   wire:model.live="ENDS"
                                    value="AFTER"><span> After </span>
                         </label>
 
                         <label>
                             <input type="number"
-                                   wire:model="rruleArray.COUNT"
+                                   wire:model.live="rruleArray.COUNT"
                                    step="1"
                                    min="1"
                                    class="border p-2 rounded w-16"
@@ -171,7 +171,7 @@
     @else
         <div class="flex items-center justify-between">
             <p>{{ $humanReadable }}</p>
-            <input type="hidden" wire:model="rruleString" name="rrule_string">
+            <input type="hidden" wire:model.live="rruleString" name="rrule_string">
             <button type="button"
                     wire:click="$toggle('editable')"
                     class="p-4 text-blue-500">Edit
